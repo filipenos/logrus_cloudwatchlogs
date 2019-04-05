@@ -7,11 +7,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
-	"github.com/sirupsen/logrus"
 )
 
 type Hook struct {
@@ -128,7 +128,7 @@ func (h *Hook) putBatches(ticker <-chan time.Time) {
 		select {
 		case p := <-h.ch:
 			messageSize := len(*p.Message) + 26
-			if size + messageSize >= 1048576 || len(batch) == 10000 {
+			if size+messageSize >= 1048576 || len(batch) == 10000 {
 				go h.sendBatch(batch)
 				batch = nil
 				size = 0
@@ -143,7 +143,7 @@ func (h *Hook) putBatches(ticker <-chan time.Time) {
 	}
 }
 
-func(h *Hook) sendBatch(batch []*cloudwatchlogs.InputLogEvent){
+func (h *Hook) sendBatch(batch []*cloudwatchlogs.InputLogEvent) {
 	h.m.Lock()
 	defer h.m.Unlock()
 

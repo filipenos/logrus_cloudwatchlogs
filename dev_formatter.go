@@ -3,7 +3,7 @@ package logrus_cloudwatchlogs
 import (
 	"net/http"
 
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 type DevFormatter struct {
